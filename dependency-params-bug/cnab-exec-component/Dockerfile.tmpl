@@ -1,0 +1,11 @@
+FROM quay.io/deis/lightweight-docker-go:v0.7.0
+FROM debian:stretch
+COPY --from=0 /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
+
+ARG BUNDLE_DIR
+
+# PORTER_MIXINS
+RUN apt-get update -y && \
+    apt-get install jq curl gnupg2 -y
+
+COPY . $BUNDLE_DIR

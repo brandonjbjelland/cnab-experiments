@@ -1,0 +1,43 @@
+name: cnab-parent-component
+version: 0.1.0
+invocationImage: brandoconnor/cnab-parent-component:v0.1.0
+tag: brandoconnor/cnab-parent-component:v0.1.0
+
+parameters:
+  - name: somearg
+    type: string
+    default: baz
+  - name: environment
+    type: string
+    default: qa
+
+dependencies:
+  exec-child:
+    tag: brandoconnor/cnab-exec-component:v0.3.0
+    parameters:
+      somearg: "{{ bundle.parameters.somearg }}"
+      environment: "{{ bundle.parameters.environment }}"
+
+mixins:
+  - exec
+
+install:
+  - exec:
+      description: "Install Hello World"
+      command: bash
+      flags:
+        c: echo Hello World
+
+upgrade:
+  - exec:
+      description: "World 2.0"
+      command: bash
+      flags:
+        c: echo World 2.0
+
+uninstall:
+  - exec:
+      description: "Uninstall Hello World"
+      command: bash
+      flags:
+        c: echo Goodbye World
