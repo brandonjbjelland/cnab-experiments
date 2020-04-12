@@ -3,6 +3,20 @@ version: 0.1.0
 invocationImage: brandoconnor/cnab-parent-component:v0.1.0
 tag: brandoconnor/cnab-parent-component:v0.1.0
 
+dependencies:
+  exec-child:
+    tag: brandoconnor/cnab-exec-component:v0.3.0
+    parameters:
+      somearg: someargval
+      environment: blarg
+  exec-child2:
+    tag: brandoconnor/cnab-exec-component:v0.3.0
+    parameters:
+      # wiring between bundle depenencies doens't work yet - renders literally
+      somearg: "{{ bundle.dependencies.exec-child.outputs.somearg }}"
+      # passing params to depenencies also fails - this renders literally
+      environment: "{{ bundle.parameters.environment }}"
+
 parameters:
   - name: somearg
     type: string
@@ -10,13 +24,6 @@ parameters:
   - name: environment
     type: string
     default: qa
-
-dependencies:
-  exec-child:
-    tag: brandoconnor/cnab-exec-component:v0.3.0
-    parameters:
-      somearg: "{{ bundle.parameters.somearg }}"
-      environment: "{{ bundle.parameters.environment }}"
 
 mixins:
   - exec
@@ -26,18 +33,19 @@ install:
       description: "Install Hello World"
       command: bash
       flags:
-        c: echo Hello World
+        # woot! this renders properly
+        c: '"echo {{ bundle.dependencies.exec-child.outputs.somearg }}"'
 
 upgrade:
   - exec:
       description: "World 2.0"
       command: bash
       flags:
-        c: echo World 2.0
+        c: '"echo World 2.0"'
 
 uninstall:
   - exec:
       description: "Uninstall Hello World"
       command: bash
       flags:
-        c: echo Goodbye World
+        c: '"echo Goodbye World"'

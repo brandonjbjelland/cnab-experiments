@@ -2,7 +2,7 @@
 
 Reproducing a porter bug with passing parameters to dependent porter bundles.
 
-From the porter CLI, installing this component works:
+From the porter CLI, installing the exec component individually works:
 
 ```bash
 $ porter version
